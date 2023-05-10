@@ -29,7 +29,7 @@ def phone_home(mothership_ip: str, mothership_port: int):
 
     conn = http.client.HTTPConnection(mothership_ip, mothership_port)
     try:
-        conn.request("GET", "/")
+        conn.request("GET", "/home")
         r = conn.getresponse()
         return r.read().decode()
     except ConnectionRefusedError as err:
@@ -37,7 +37,7 @@ def phone_home(mothership_ip: str, mothership_port: int):
         print('CONNECTION TO MOTHERSHIP REFUSED.')
 
 
-def open_local_channel(local_ip: str, local_port: int, duration: int = 5):
+def open_local_channel(local_ip: str, local_port: int):
     
     print(f'CREATING NEW LOCAL CHANNEL THREAD...')
 
