@@ -20,7 +20,7 @@ def insert_document(collection_name, document):
     collection = mothershipdb[collection_name]
 
     try:
-        collection.insert_one(document.to_mongo())
-        return f'MONGO INSERTED: {document.to_mongo()}'
+        collection.insert_one(document)
+        return f'MONGO INSERTED: {document}'
     except errors.DuplicateKeyError as err:
-        return f'MONGO DUPLICATE KEY ERROR: {document.to_mongo()}'
+        return f'MONGO DUPLICATE KEY ERROR IN {document}'
