@@ -1,4 +1,5 @@
 from pymongo import MongoClient
+from pymongo import errors
 import os
 
 #[Environment]::SetEnvironmentVariable("KEY", "VALUE", "[MACHINE, USER, PROCESS]")
@@ -12,3 +13,14 @@ def get_database():
     client = MongoClient(conn)
 
     return client['mothershipdb']
+
+
+def insert_document(collection_name, document):
+    mothershipdb = get_database()
+    collection = mothershipdb[collection_name]
+
+    try:
+        collection.insert_one(document.to_mongo())
+        return f'MONGO INSERTED: {document.to_mongo()}'
+    except errors.DuplicateKeyError as err:
+        return f'MONGO DUPLICATE KEY ERROR: {document.to_mongo()}'

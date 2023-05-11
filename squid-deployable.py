@@ -16,7 +16,7 @@ DEFAULT_DURATION = 5
 
 def main():
 
-    register(DEFAULT_MOTHERSHIP_ADDRESS, DEFAULT_MOTHERSHIP_PORT)
+    r = register(DEFAULT_MOTHERSHIP_ADDRESS, DEFAULT_MOTHERSHIP_PORT)
 
     if LOCAL_COMMS:
         local_comms_thread = open_local_comms(LOCAL_ADDRESS, LOCAL_PORT)
@@ -38,7 +38,7 @@ def register(mothership_ip, mothership_port):
     hostname = socket.gethostname()
     date_created = time.time() 
 
-    params = f'{{"id": "{hostname}-{mac}", "date_created": "{date_created}"}}'.encode()
+    params = f'{{"id": "{hostname}-{mac}","name": "{hostname}-{mac}", "hostname": "{hostname}", "mac": "{mac}", "date_created": "{date_created}"}}'.encode()
     print(params)
     content_length = len(params)
     content_type = 'application/json'
