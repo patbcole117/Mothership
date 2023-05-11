@@ -2,6 +2,8 @@ from  http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 import threading
 import http.client
 import time
+import uuid
+import socket
 
 DEFAULT_MOTHERSHIP_ADDRESS = "127.0.0.1"
 DEFAULT_MOTHERSHIP_PORT = 8000
@@ -14,7 +16,7 @@ DEFAULT_DURATION = 5
 
 def main():
 
-    register(LOCAL_ADDRESS, LOCAL_PORT)
+    register(DEFAULT_MOTHERSHIP_ADDRESS, DEFAULT_MOTHERSHIP_PORT)
 
     if LOCAL_COMMS:
         local_comms_thread = open_local_comms(LOCAL_ADDRESS, LOCAL_PORT)
@@ -30,16 +32,21 @@ def main():
     
         
 
-def register(mothership_ip: str, mothership_port: int):
+def register(mothership_ip, mothership_port):
 
-    params = '{"MAC": 123456, "HOSTNAME": "TEST", "MESSAGE": "HELLO"}'.encode()
+    mac = uuid.getnode()
+    hostname = socket.gethostname()
+    date_created = time.time() 
+
+    params = f'{{"id": "{hostname}-{mac}", "date_created": "{date_created}"}}'.encode()
+    print(params)
     content_length = len(params)
     content_type = 'application/json'
     headers = {"Content-Type": content_type, "Content-Length": content_length}
 
     conn = http.client.HTTPConnection(mothership_ip, mothership_port)
     try:
-        conn.request("POST", "/register", params, headers)
+        conn.request("POST", "/register/", params, headers)
         r = conn.getresponse()
         return r.read().decode()
     except ConnectionRefusedError as err:
@@ -47,7 +54,7 @@ def register(mothership_ip: str, mothership_port: int):
         print('CONNECTION TO MOTHERSHIP REFUSED.')
 
 
-def phone_home(mothership_ip: str, mothership_port: int):
+def phone_home(mothership_ip, mothership_port):
 
     conn = http.client.HTTPConnection(mothership_ip, mothership_port)
     try:
@@ -59,7 +66,7 @@ def phone_home(mothership_ip: str, mothership_port: int):
         print('CONNECTION TO MOTHERSHIP REFUSED.')
 
 
-def open_local_comms(local_ip: str, local_port: int):
+def open_local_comms(local_ip, local_port):
 
     local_channel_server = ThreadingHTTPServer((LOCAL_ADDRESS, LOCAL_PORT), LocalHandler)
     local_channel_thread = threading.Thread(target=local_channel_server.serve_forever)
