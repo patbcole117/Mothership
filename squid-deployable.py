@@ -33,10 +33,13 @@ def main():
 def register(mothership_ip: str, mothership_port: int):
 
     params = '{"MAC": 123456, "HOSTNAME": "TEST", "MESSAGE": "HELLO"}'.encode()
+    content_length = len(params)
+    content_type = 'application/json'
+    headers = {"Content-Type": content_type, "Content-Length": content_length}
 
     conn = http.client.HTTPConnection(mothership_ip, mothership_port)
     try:
-        conn.request("POST", "/register", params)
+        conn.request("POST", "/register", params, headers)
         r = conn.getresponse()
         return r.read().decode()
     except ConnectionRefusedError as err:
@@ -68,13 +71,27 @@ def open_local_comms(local_ip: str, local_port: int):
 
 class LocalHandler(BaseHTTPRequestHandler):
 
-    def do_GET(self):
+    def _set_headers(self):
         self.send_response(200)
+        self.send_header('Content-Type', 'application/json')
         self.end_headers()
+
+    def do_GET(self):
+        self._set_headers()
         message = threading.current_thread().name
         self.wfile.write(message.encode())
         self.wfile.write('\n'.encode())
         return
+
+    def do_POST(self):
+        
+        content_length = int(self.headers.get("Content-Length"))
+        body = self.rfile.read(content_length)
+        print(body.decode())
+
+        self._set_headers()
+        return
+
 
 if __name__ == "__main__":
     main()
