@@ -1,13 +1,14 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 from mdc import get_database, insert_document
+import time
 
 class Squid(BaseModel):
     id: str
     group: str
     hostname: str
     mac: int
-    timestamp: float
+    timestamp: float = time.time()
 
     def to_mongo(self):
         return {"_id": self.id, "group": self.group, "hostname": self.hostname, "mac": self.mac, "timestamp": self.timestamp}
@@ -17,15 +18,16 @@ class Call(BaseModel):
     squid_id: str
     qcommand_id: str
     result: str
-    timestamp: float
+    timestamp: float = time.time()
 
+# curl -Uri http://127.0.0.1:8000/admin/qcommand -Method POST -Body $post -ContentType 'application/json'
 
 class Qcommand(BaseModel):
     target_id: str
-    module: int
+    module_id: int
     payload: str
-    created: float
-    status: str
+    created: float = time.time()
+    status: str = "QUEUED"
     # status = [QUEUED, ISSUED, FAILED, COMPLETED]
 
 

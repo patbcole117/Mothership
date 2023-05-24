@@ -1,7 +1,6 @@
 from  http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 import threading
 import http.client
-import time
 import uuid
 import socket
 
@@ -37,15 +36,13 @@ def main():
         
 def register():
 
-    timestamp = time.time() 
-    params = f'{{"id": "{HOSTNAME}-{MAC}","group": "{HOSTNAME}-{MAC}", "hostname": "{HOSTNAME}", "mac": "{MAC}", "timestamp": "{timestamp}"}}'.encode()
+    params = f'{{"id": "{HOSTNAME}-{MAC}","group": "{HOSTNAME}-{MAC}", "hostname": "{HOSTNAME}", "mac": "{MAC}"}}'.encode()
     return send_post_to_mothership("/squids/register/", params)
 
     
 def phone_home():
 
-    timestamp = time.time()
-    params = f'{{"caller": "{HOSTNAME}-{MAC}", "timestamp": {timestamp}}}'
+    params = f'{{"caller": "{HOSTNAME}-{MAC}"}}'
     return send_post_to_mothership("/squids/home/", params)
   
 
