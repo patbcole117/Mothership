@@ -24,3 +24,10 @@ def insert_document(collection_name, document):
         return f'MONGO INSERTED: {document}'
     except errors.DuplicateKeyError as err:
         return f'MONGO DUPLICATE KEY ERROR IN {document}'
+
+def find_document(collection_name, key, value):
+    mothershipdb = get_database()
+    collection = mothershipdb[collection_name]
+
+    document = collection.find_one({key: value})
+    return document
