@@ -46,7 +46,8 @@ def squids_checkin(call: Call):
     squid = find_document("squids", {"sid": call.sid})
     sid = squid['sid'] # TODO: command grab based on sid or gid.
     gid = squid['gid']
-    command = find_document("commands", {"target_id": gid}, {"_id": 0})
+    command = find_document("commands", {"target_id": gid})
+    id = command.pop("_id")
     return command
 
 
