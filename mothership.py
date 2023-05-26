@@ -18,7 +18,7 @@ class Call(BaseModel):
 
 #curl -Uri http://127.0.0.1:8000/admin/command -Method POST -Body $post -ContentType 'application/json'
 #$post = @{                                                                            
-#target_id = "123456"
+#target_id = "SQUIDS"
 #mid = 1
 #payload = "Hello world!"
 #} | ConvertTo-Json
@@ -47,7 +47,8 @@ def squids_checkin(call: Call):
     sid = squid['sid'] # TODO: command grab based on sid or gid.
     gid = squid['gid']
     command = find_document("commands", "target_id", gid)
-    return {command}
+    #print(type(command))
+    return command
 
 
 @app.post("/squids/register/")

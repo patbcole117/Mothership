@@ -30,5 +30,5 @@ def find_document(collection_name, key, value):
     mothershipdb = get_database()
     collection = mothershipdb[collection_name]
 
-    document = collection.find_one({key: value})
+    document = collection.find_one({key: value}, {"_id": 0})
     return document
