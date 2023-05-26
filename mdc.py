@@ -26,9 +26,9 @@ def insert_document(collection_name, document):
     except errors.DuplicateKeyError as err:
         return f'MONGO DUPLICATE KEY ERROR IN {document}'
 
-def find_document(collection_name, key, value):
+def find_document(collection_name, criteria, filter = {}):
     mothershipdb = get_database()
     collection = mothershipdb[collection_name]
 
-    document = collection.find_one({key: value}, {"_id": 0})
+    document = collection.find_one(criteria, filter)
     return document
