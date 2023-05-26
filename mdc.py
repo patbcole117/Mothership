@@ -6,10 +6,11 @@ import os
 
 MONGO_USER = os.environ.get("MONGO_USER")
 MONGO_PASS = os.environ.get("MONGO_PASS")
+MONGO_URL = os.environ.get("MONGO_URL")
 
 def get_database():
     
-    conn = f'mongodb+srv://{MONGO_USER}:{MONGO_PASS}@homenet-asia-mongodb-de.4sgvde0.mongodb.net'
+    conn = f'mongodb+srv://{MONGO_USER}:{MONGO_PASS}@{MONGO_URL}-mongodb-de.4sgvde0.mongodb.net'
     client = MongoClient(conn)
 
     return client['mothershipdb']
