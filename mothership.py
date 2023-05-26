@@ -41,9 +41,10 @@ async def root():
 
 @app.post("/squids/home/")
 def squids_checkin(call: Call):
+    call.timestamp = time.time()
     insert_document("calls", vars(call))
     squid = find_document("squids", "sid", call.sid)
-    sid = squid['sid']
+    sid = squid['sid'] # TODO: command grab based on sid or gid.
     gid = squid['gid']
     command = find_document("commands", "target_id", gid)
     return {command}
